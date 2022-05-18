@@ -15,6 +15,19 @@
             "args": [
                 "start"
             ]
+        },
+        {
+            "type": "pwa-node",
+            "request": "launch",
+            "name": "Deploy",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "runtimeExecutable": "npm",
+            "args": [
+                "run",
+                "deploy"
+            ]
         }
     ]
 }
