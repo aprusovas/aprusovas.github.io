@@ -1,77 +1,145 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useRef } from "react"
+import Screens, { Screen } from "./Screens"
+import { ASSETS_INDICES, CHERRY_REPOSITION_AFTER, FRAME_MIN_TIME, GRID_SIZE, INITIAL_TAIL, MAP } from "./utils/consts"
+import { draw_grid, draw_set, draw_snake } from "./utils/draw"
+import { SetIndices, SnakeDirection, SnakeTail } from "./utils/types"
+import * as _ from "lodash"
+import { randomize_cherry_position } from "./utils/functions"
 
-const FRAMES_PER_SECOND = 5
-const FRAME_MIN_TIME = (1000/60) * (60 / FRAMES_PER_SECOND) - (1000/60) * 0.5
-const GRID_SIZE = 15
-const ASSETS: {
-    set: HTMLImageElement,
-    grid_width: number,
-    grid_height: number
-} = {
-    set: new Image(),
-    grid_height: 3,
-    grid_width: 4
+type State = 'running' | 'paused'
+
+interface SnakeData {
+    speed: number
+    time: number
+    tick: number
+    direction: SnakeDirection
+    next_direction: SnakeDirection
+    tail: SnakeTail
+    onUp: () => void
+    onDown: () => void
+    onLeft: () => void
+    onRight: () => void
 }
-const MAP = [
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0],
-    [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
-]
-const SNAKE = {
-    speed: 1,
-    time: 0,
-    tick: 500,
-    direction: 'up',
-    tail: [
-        { x: 10, y: 9 },
-        { x: 10, y: 10 },
-        { x: 10, y: 11 },
-        { x: 10, y: 12 },
-        { x: 10, y: 13 }
-    ],
-    onUp: function () {
-        this.direction = 'up'
-    },
-    onDown: function () {
-        this.direction = 'down'
-    },
-    onLeft: function () {
-        this.direction = 'left'
-    },
-    onRight: function () {
-        this.direction = 'right'
-    },
-    move: function (delta_time: number) {
-        this.time += delta_time * this.speed
 
-        if (this.time < this.tick) {
+const Snake = () => {
+    let score = 0
+    let level = 1
+    let state: State = 'paused'
+    let cherry_position: SetIndices | undefined = undefined
+
+    const canvasRef = useRef<HTMLCanvasElement>(null)
+    const levelRef = useRef<HTMLSpanElement>(null)
+    const scoreRef = useRef<HTMLSpanElement>(null)
+    const setScreenRef = useRef<((screen: Screen) => void) | undefined>()
+
+    const setLevel = (lvl: number) => {
+        level = lvl
+        if (!levelRef.current) {
+            return
+        }
+        levelRef.current.innerText = ("00" + level).slice(-3)
+    }
+
+    const setScore = (scr: number) => {
+        score = scr
+        if (!scoreRef.current) {
+            return
+        }
+        scoreRef.current.innerText = ("0000" + score).slice(-5)
+    }
+
+    const setGameOver = () => {
+        if (setScreenRef.current) {
+            setScreenRef.current(Screen.GAME_OVER)
+        }
+        state = 'paused'
+    }
+
+    const onStart = () => {
+        if (setScreenRef.current) {
+            setScreenRef.current(Screen.NONE)
+        }
+        cherry_position = randomize_cherry_position(snake.tail)
+        state = 'running'
+    }
+
+    const onRestart = () => {
+        snake.speed = 1
+        snake.time = 0
+        snake.tick = 500
+        snake.direction = 'up'
+        snake.next_direction = 'up'
+        snake.tail = INITIAL_TAIL
+
+        setLevel(1)
+        setScore(0)
+        onStart()
+    }
+    
+    const snake: SnakeData = {
+        speed: 1,
+        time: 0,
+        tick: 500,
+        direction: 'up',
+        next_direction: 'up',
+        tail: _.cloneDeep(INITIAL_TAIL),
+        onUp: function () {
+            if (this.direction !== 'down') {
+                this.next_direction = 'up'
+            }
+        },
+        onDown: function () {
+            if (this.direction !== 'up') {
+                this.next_direction = 'down'
+            }
+        },
+        onLeft: function () {
+            if (this.direction !== 'right') {
+                this.next_direction = 'left'
+            }
+        },
+        onRight: function () {
+            if (this.direction !== 'left') {
+                this.next_direction = 'right'
+            }
+        }
+    }
+
+    const move_snake = (delta_time: number) => {
+        snake.time += delta_time * (snake.speed + level * 0.1)
+
+        if (snake.time < snake.tick) {
             return
         }
 
-        this.time = 0
-
         let prev = { x: 0, y: 0 }
+        let pick_cherry = false
 
-        this.tail = this.tail.map((p, index) => {
+        const new_tail = _.cloneDeep(snake.tail).map((p, index) => {
             if (index === 0) {
                 prev = { x: p.x, y: p.y }
-                switch (this.direction) {
+                switch (snake.next_direction) {
                     case 'up': p.y -= 1; break
                     case 'down': p.y += 1; break
                     case 'left': p.x -= 1; break
                     case 'right': p.x += 1; break
+                }
+                if (p.x < 0 || p.y < 0 || p.x >= MAP[0].length || p.y >= MAP.length) {
+                    setGameOver()
+                } else if (MAP[p.y][p.x] === 1) {
+                    setGameOver()
+                } else {
+                    for (let i = index + 1; i < snake.tail.length - 1; ++i) {
+                        if (p.x === snake.tail[i].x && p.y === snake.tail[i].y) {
+                            setGameOver()
+                            break
+                        }
+                    }
+                }
+
+                if (cherry_position && p.x === cherry_position.x && p.y === cherry_position.y) {
+                    pick_cherry = true
                 }
             } else {
                 let next_prev = { x: p.x, y: p.y }
@@ -82,101 +150,33 @@ const SNAKE = {
             return p
         })
 
-    }
-}
+        if (state !== 'running') {
+            return
+        }
 
-const draw_set = (ctx: CanvasRenderingContext2D, grid_x: number, grid_y: number, x: number, y: number, rotate: number = 0) => {
-    const width = ASSETS.set.width / ASSETS.grid_width
-    const height = ASSETS.set.height / ASSETS.grid_height
+        if (pick_cherry) {
+            cherry_position = randomize_cherry_position(snake.tail)
+            
+            setScore(score + 100)
 
-    ctx.drawImage(ASSETS.set, width * grid_x, height * grid_y, width, height, x, y, GRID_SIZE, GRID_SIZE)
-}
-
-const draw_set_rotated = (ctx: CanvasRenderingContext2D, grid_x: number, grid_y: number, x: number, y: number, degrees: number = 0) => {
-    const width = ASSETS.set.width / ASSETS.grid_width
-    const height = ASSETS.set.height / ASSETS.grid_height
-    const x_offset = width * grid_x
-    const y_offset = height * grid_y
-    const half_size = GRID_SIZE / 2
-
-    ctx.save()
-    ctx.translate(x + half_size, y + half_size)
-    ctx.rotate(degrees * Math.PI / 180.0)
-    ctx.translate(-x - half_size, -y - half_size)
-    ctx.drawImage(ASSETS.set, x_offset, y_offset, width, height, x, y, GRID_SIZE, GRID_SIZE)
-    ctx.restore()
-}
-
-const draw_grid = (ctx: CanvasRenderingContext2D, delta_time: number) => {
-    const width = ctx.canvas.width
-    const height = ctx.canvas.height
-
-    let s = GRID_SIZE
-    let nX = Math.floor(width / s) - 2
-    let nY = Math.floor(height / s) - 1
-    let pX = width - nX * s
-    let pY = height - nY * s
-    let pL = Math.ceil(pX / 2)
-    let pT = Math.ceil(pY / 2)
-    let pR = width - nX * s - pL
-    let pB = height - nY * s - pT
+            if (score % 500 === 0) {
+                setLevel(level + 1)
+            }
+        }
         
-    ctx.strokeStyle = 'lightgrey'
-    ctx.beginPath()
+        snake.direction = snake.next_direction
+        snake.time = 0
+        snake.tail = new_tail
+    }
 
-    for (var x = pL, x_grid = 0; x < width - pR; x += s, x_grid++) {
-        for (var y = pT, y_grid = 0; y < height - pB; y += s, y_grid++) {
-            switch (MAP[y_grid][x_grid]) {
-                case 0: draw_set(ctx, 0, 1, x, y); break
-                case 1: draw_set(ctx, 0, 0, x, y); break
-            }
+    const onKeyDown = (event: KeyboardEvent) => {
+        switch (event.key) {
+            case 'ArrowLeft': snake.onLeft(); break
+            case 'ArrowRight': snake.onRight(); break
+            case 'ArrowUp': snake.onUp(); break
+            case 'ArrowDown': snake.onDown(); break
         }
     }
-    
-    ctx.stroke()
-}
-
-const draw_snake = (ctx: CanvasRenderingContext2D, delta_time: number) => {
-    // let index = 0
-    let s = GRID_SIZE
-
-    SNAKE.tail.forEach((tail, index) => {
-        if (index === 0) {
-            let rotation = 0
-            switch (SNAKE.direction) {
-                case 'up': rotation = 180; break
-                case 'left': rotation = 90; break
-                case 'right': rotation = 270; break
-            }
-            draw_set_rotated(ctx, 1, 2, tail.x * s, tail.y * s, rotation)
-        } else if (index === SNAKE.tail.length - 1) {
-            draw_set_rotated(ctx, 0, 2, tail.x * s, tail.y * s, 90)
-        } else {
-            switch (index) {
-                case 0: draw_set_rotated(ctx, 1, 2, tail.x * s, tail.y * s, 180); break
-                default: draw_set_rotated(ctx, 1, 1, tail.x * s, tail.y * s, 0); break
-            }
-        }
-    })
-}
-
-const draw = (ctx: CanvasRenderingContext2D, delta_time: number) => {
-    draw_grid(ctx, delta_time)
-    draw_snake(ctx, delta_time)
-}
-
-const update = (delta_time: number) => {
-    SNAKE.move(delta_time)
-}
-
-const load = () => {
-    ASSETS.set.src = './img/snakeset.png'
-}
-
-load()
-
-const Snake = () => {
-    const canvasRef = useRef<HTMLCanvasElement>(null)
 
     useEffect(() => {
         const canvas = canvasRef.current
@@ -191,6 +191,7 @@ const Snake = () => {
 
         let animationFrameId = 0
         let lastFrameTime = 0
+        let reposition_cherry = CHERRY_REPOSITION_AFTER
         
         const render = (time: DOMHighResTimeStamp) => {
             if (time - lastFrameTime < FRAME_MIN_TIME) {
@@ -199,23 +200,29 @@ const Snake = () => {
             }
 
             context.clearRect(0, 0, canvas.width, canvas.height)
+            
+            if (state === 'running') {
+                const delta_time = time - lastFrameTime
 
-            const delta_time = time - lastFrameTime
+                move_snake(delta_time)
 
-            update(delta_time)
-            draw(context, delta_time)
+                reposition_cherry -= delta_time
+
+                if (reposition_cherry < 0) {
+                    reposition_cherry = CHERRY_REPOSITION_AFTER
+                    cherry_position = randomize_cherry_position(snake.tail)
+                }
+            }
+            
+            draw_grid(context)
+            draw_snake(context, snake.tail, snake.direction)
+
+            if (cherry_position) {
+                draw_set(context, ASSETS_INDICES.CHERRY, cherry_position.x * GRID_SIZE, cherry_position.y * GRID_SIZE)
+            }
 
             lastFrameTime = time
             animationFrameId = requestAnimationFrame(render)
-        }
-
-        const onKeyDown = (event: KeyboardEvent) => {
-            switch (event.key) {
-                case 'ArrowLeft': SNAKE.onLeft(); break
-                case 'ArrowRight': SNAKE.onRight(); break
-                case 'ArrowUp': SNAKE.onUp(); break
-                case 'ArrowDown': SNAKE.onDown(); break
-            }
         }
 
         animationFrameId = window.requestAnimationFrame(render)
@@ -229,7 +236,20 @@ const Snake = () => {
     }, [])
 
     return (
-        <canvas ref={canvasRef} className="bg-white border border-slate-200 w-full" height={250}/>
+        <div>
+            <div className="font-mono flex text-xs py-2 px-4 gap-x-4 bg-white justify-end">
+                <div className="text-slate-600">
+                    SCORE: <span className="font-bold" ref={scoreRef}>{("0000" + score).slice(-5)}</span>
+                </div>
+                <div className="text-slate-600">
+                    LEVEL: <span className="font-bold"ref={levelRef}>{("00" + level).slice(-3)}</span>
+                </div>
+            </div>
+            <div className="relative">
+                <canvas ref={canvasRef} className="bg-white border border-slate-200 w-full" height={MAP.length * GRID_SIZE}/>
+                <Screens onStart={onStart} onRestart={onRestart} onSetScreen={setScreenRef}/>
+            </div>
+        </div>
     )
 }
 
