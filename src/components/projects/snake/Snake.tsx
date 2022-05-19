@@ -27,6 +27,7 @@ const Snake = () => {
     let level = 1
     let state: State = 'paused'
     let cherry_position: SetIndices | undefined = undefined
+    let reposition_cherry = CHERRY_REPOSITION_AFTER
 
     const canvasRef = useRef<HTMLCanvasElement>(null)
     const levelRef = useRef<HTMLSpanElement>(null)
@@ -71,6 +72,7 @@ const Snake = () => {
         snake.direction = 'up'
         snake.next_direction = 'up'
         snake.tail = INITIAL_TAIL
+        reposition_cherry = CHERRY_REPOSITION_AFTER
 
         setLevel(1)
         setScore(0)
@@ -156,10 +158,13 @@ const Snake = () => {
 
         if (pick_cherry) {
             cherry_position = randomize_cherry_position(snake.tail)
+            reposition_cherry = CHERRY_REPOSITION_AFTER
+
+            new_tail.push(snake.tail[snake.tail.length - 1])
             
             setScore(score + 100)
 
-            if (score % 500 === 0) {
+            if (score % 300 === 0) {
                 setLevel(level + 1)
             }
         }
@@ -191,7 +196,6 @@ const Snake = () => {
 
         let animationFrameId = 0
         let lastFrameTime = 0
-        let reposition_cherry = CHERRY_REPOSITION_AFTER
         
         const render = (time: DOMHighResTimeStamp) => {
             if (time - lastFrameTime < FRAME_MIN_TIME) {
