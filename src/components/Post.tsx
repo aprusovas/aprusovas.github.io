@@ -61,9 +61,9 @@ const Post = ({ post, profile, content }: PostProps) => {
             </div>
             {
                 visible &&
-                    <div className="fixed inset-0">
+                    <div className="fixed inset-0 bg-black/10">
                         <div className="relative max-w-[500px] w-full h-full m-auto">
-                            <div className="absolute inset-0 bg-white m-2 md:m-5 rounded-xl z-10 shadow-lg overflow-y-scroll ring-1 ring-slate-200">
+                            <div className="absolute inset-0 bg-white m-2 md:m-4 rounded-xl z-10 shadow-lg overflow-y-scroll ring-1 ring-slate-200">
                                 <div onClick={onToggleDialog} className="absolute right-6 top-6 text-2xl bg-slate-50/50 hover:bg-slate-100 rounded-full cursor-pointer p-2">
                                     <RiCloseFill />
                                 </div>
