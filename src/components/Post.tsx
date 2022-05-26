@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
-import { renderToString } from 'react-dom/server';
+import React, { useEffect, useState } from "react";
 import { RiCloseFill } from 'react-icons/ri';
 import ReactMarkdown from 'react-markdown';
+import { CodeProps } from "react-markdown/lib/ast-to-react";
 import rehypeRaw from 'rehype-raw';
 import { ContentInfo } from "../types/content";
 import { PostInfo } from "../types/post";
@@ -34,18 +34,13 @@ const Post = ({ post, profile, content }: PostProps) => {
         month: 'long',
         day: 'numeric'
     })
-
+    
     useEffect(() => {
         if (visible) {
             fetch(`/posts/${post.id}.md`).then((response) => {
                 return response.text()
             }).then((md) => {
-                setMarkdown(md.replace(/\{(.+?)}/g, function(m, label, url) {
-                    if (content[label]) {
-                        return renderToString(content[label])
-                    }
-                    return label
-                }))
+                setMarkdown(md)
             }).catch(console.error)
         }
     }, [content, post.id, visible])
@@ -76,7 +71,24 @@ const Post = ({ post, profile, content }: PostProps) => {
                                     <div className="font-extrabold text-3xl pt-1 pb-2">{post.title}</div>
                                     <div className="text-slate-700">{post.description}</div>
                                     <img className="my-2 rounded-lg overflow-hidden" src={`/img/screenshots/${post.screenshot}`} alt="Post preview"/>
-                                    <ReactMarkdown rehypePlugins={[rehypeRaw]}>{markdown}</ReactMarkdown>
+                                    <article className="prose lg:prose-xl">
+                                        <ReactMarkdown
+                                            rehypePlugins={[rehypeRaw]}
+                                            components={{
+                                                pre: ({ children }: any) => {
+                                                    return <>{children}</>
+                                                },
+                                                code: ({ className, children, node }: CodeProps) => {
+                                                    if (className && className.startsWith('language-component-')) {
+                                                        return content[className.slice(19)] ?? <div>NOT FOUND</div>
+                                                    }
+                                                    return <code>{children}</code>
+                                                }
+                                            }}
+                                        >
+                                            {markdown}
+                                        </ReactMarkdown>
+                                    </article>
                                 </div>
                                 <div className="absolute bottom-0 inset-x-0 text-white bg-gradient-to-t from-black/80 to-black/0 px-4 pb-3 pt-8 text-sm flex gap-x-2 items-center">
                                     <img src={profile.picture} alt="Profile" className="w-4 h-4 rounded-full ring-1 ring-white"/>

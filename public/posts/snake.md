@@ -1,5 +1,6 @@
-Kazkas
+### Final result
 
-{snake}
+```component-snake
+```
 
-##Kazkas
+### Thank you 🙏

@@ -240,8 +240,8 @@ const Snake = () => {
     }, [])
 
     return (
-        <div>
-            <div className="font-mono flex text-xs py-2 px-4 gap-x-4 bg-white justify-end">
+        <div className="rounded-lg overflow-hidden">
+            <div className="font-mono flex text-xs py-2 px-4 gap-x-4 bg-slate-100 justify-end">
                 <div className="text-slate-600">
                     SCORE: <span className="font-bold" ref={scoreRef}>{("0000" + score).slice(-5)}</span>
                 </div>
