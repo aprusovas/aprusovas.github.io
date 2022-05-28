@@ -5,3 +5,11 @@
 body {
     @apply bg-zinc-100 text-white;
 }
+
+@layer components {
+    /* Remove tap highlight */
+    * {
+        -webkit-tap-highlight-color: rgba(0,0,0,0);
+        -webkit-tap-highlight-color: transparent;
+    }
+}

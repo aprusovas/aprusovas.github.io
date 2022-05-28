@@ -1,7 +1,8 @@
+const year = new Date().getFullYear()
 const Footer = () => {
     return (
         <div className="text-center p-8 text-slate-400 text-xs">
-            © {new Date().getFullYear()} Aurimas Prusovas
+            © {year} Aurimas Prusovas
         </div>
     )
 }

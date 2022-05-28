@@ -1,3 +1,8 @@
+import { ReactNode } from "react";
+
 export interface ContentInfo {
-    [key: string]: any
+    /**
+     * Custom content which can be embed to markdown
+     */
+    [key: string]: ReactNode
 }

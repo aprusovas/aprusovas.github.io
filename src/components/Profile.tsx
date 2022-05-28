@@ -1,6 +1,9 @@
 import { ProfileInfo } from "../types/profile"
 
 interface ProfileProps {
+    /**
+     * Profile
+     */
     profile: ProfileInfo
 }
 
