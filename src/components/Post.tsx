@@ -99,7 +99,7 @@ export const PostLoading = () => {
                     <div className="w-[200px] bg-slate-300 rounded-md h-[20px]"></div>
                 </div>
                 <div className="px-4 text-slate-700">
-                    <div className="w-[400px] bg-slate-200 rounded-md h-[30px]"></div>
+                    <div className="max-w-[400px] bg-slate-200 rounded-md h-[30px]"></div>
                 </div>
             </div>
             <div className="relative bg-slate-400 aspect-video"></div>

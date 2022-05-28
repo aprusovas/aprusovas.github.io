@@ -95,7 +95,7 @@ const content: ContentInfo = {
  * Posts
  */
 const posts: string[] = [
-    "./posts/snake.post"
+    "snake"
 ]
 
 root.render(

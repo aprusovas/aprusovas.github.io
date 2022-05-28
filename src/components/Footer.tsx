@@ -23,10 +23,10 @@ const Footer = ({ profile }: FooterProps) => {
     return (
         <>
             <div className="px-4 md:px-0 flex gap-1 flex-wrap justify-center pt-16">
-                {profile.badges.skills.map(b => <img className="rounded-md overflow-hidden" src={b} key={b} alt={b}/>)}
+                {profile.badges.skills.map(b => <img className="rounded-md overflow-hidden h-6 md:h-auto" src={b} key={b} alt={b}/>)}
             </div>
             <div className="px-4 md:px-0 flex gap-1 flex-wrap justify-center pt-8">
-                {profile.badges.other.map(b => <img className="rounded-md overflow-hidden" src={b} key={b} alt={b}/>)}
+                {profile.badges.other.map(b => <img className="rounded-md overflow-hidden h-6 md:h-auto" src={b} key={b} alt={b}/>)}
             </div>
             <div className="py-8">
                 <div className="flex justify-center pt-8 gap-x-1">

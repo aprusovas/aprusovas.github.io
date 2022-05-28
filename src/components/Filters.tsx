@@ -57,6 +57,9 @@ export const FiltersLoading = () => {
 }
 
 const Filters = ({ tags, selected_tags, on_select_tag, on_remove_tag }: FiltersProps) => {
+    if (selected_tags.length + tags.length <= 0) {
+        return <></>
+    }
     return (
         <div className="py-4">
             {
