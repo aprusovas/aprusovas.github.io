@@ -10,7 +10,7 @@ interface ProfileProps {
 const Profile = ({ profile }: ProfileProps) => {
     return (
         <>
-            <div className="pt-8 md:pt-12 pb-8 md:pb-4 md:flex md:items-center text-center md:text-left px-4 md:px-0 md:gap-x-2">
+            <div className="pt-12 pb-8 md:pb-4 md:flex md:items-center text-center md:text-left px-4 md:px-0 md:gap-x-2">
                 <div className="relative m-auto w-48 h-48 md:w-20 md:h-20">
                     <div className="rounded-full ring-4 md:ring-2 ring-white aspect-square">
                         <div className="rounded-b-full w-full h-full" style={{ backgroundImage: `url(${profile.picture})`, backgroundSize: 'cover'}}/>

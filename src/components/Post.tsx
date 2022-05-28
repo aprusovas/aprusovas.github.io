@@ -80,10 +80,10 @@ const PostDialog = ({ post, content, profile, onToggleDialog }: PostDialogProps)
                             </ReactMarkdown>
                         </article>
                     </div>
-                    <div className="absolute bottom-0 inset-x-0 text-white bg-gradient-to-t from-black/80 to-black/0 px-4 pb-4 pt-5 text-sm flex gap-x-4 items-center">
-                        <img src={profile.picture} alt="Profile" className="w-8 h-8 rounded-full ring-1 ring-white"/>
-                        <div className="text-xl">{since(new Date(post.date))} ago</div>
-                        <div className="grow flex flex-row-reverse gap-x-2">{post.tags.sort().reverse().map(t => <Tag key={t} name={t} big/>)}</div>
+                    <div className="absolute bottom-0 inset-x-0 text-white bg-gradient-to-t from-black/80 to-black/0 px-4 pb-4 pt-5 text-sm flex gap-x-2 items-center">
+                        <img src={profile.picture} alt="Profile" className="w-4 h-4 rounded-full ring-1 ring-white"/>
+                        <div>{since(new Date(post.date))} ago</div>
+                        <div className="grow flex flex-row-reverse">{post.tags.sort().reverse().map(t => <Tag key={t} name={t}/>)}</div>
                     </div>
                 </div>
             </div>

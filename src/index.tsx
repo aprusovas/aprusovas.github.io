@@ -95,7 +95,7 @@ const content: ContentInfo = {
  * Posts
  */
 const posts: string[] = [
-    require("./posts/snake.md")
+    "./posts/snake.md"
 ]
 
 root.render(
