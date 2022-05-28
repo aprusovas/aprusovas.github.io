@@ -13,7 +13,7 @@ interface FooterProps {
 
 const Link = ({ icon, url }: LinkProps) => {
     return (
-        <div onClick={() => { window.open(url, '_blank') }} className="text-slate-700 hover:bg-slate-200 bg-slate-100 rounded-full cursor-pointer w-9 h-9 flex items-center justify-center">
+        <div onClick={() => { window.open(url, '_blank') }} className="text-slate-700 hover:text-slate-800 hover:bg-slate-200 bg-slate-100 rounded-full cursor-pointer w-9 h-9 flex items-center justify-center">
             {icon}
         </div>
     )

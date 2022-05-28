@@ -6,12 +6,17 @@ import rehypeRaw from 'rehype-raw';
 import { ContentInfo } from "../types/content";
 import { PostInfo } from "../types/post";
 import { ProfileInfo } from "../types/profile";
+import { since } from "../utils/time";
 
 interface TagProps {
     /**
      * Tag name
      */
     name: string
+    /**
+     * Render bigger tag
+     */
+    big?: boolean
 }
 
 interface PostProps {
@@ -33,9 +38,9 @@ interface PostDialogProps extends PostProps {
     onToggleDialog: () => void
 }
 
-const Tag = ({ name }: TagProps) => {
+const Tag = ({ name, big }: TagProps) => {
     return (
-        <div className="rounded-md text-slate-600 bg-slate-50 text-xs uppercase px-2 py-1 scale-90">{name}</div>
+        <div className={`rounded-md text-slate-600 bg-slate-50 uppercase px-2 py-1 ${big ? `text-md` : `text-xs scale-90`}`}>{name}</div>
     )
 }
 
@@ -75,10 +80,10 @@ const PostDialog = ({ post, content, profile, onToggleDialog }: PostDialogProps)
                             </ReactMarkdown>
                         </article>
                     </div>
-                    <div className="absolute bottom-0 inset-x-0 text-white bg-gradient-to-t from-black/80 to-black/0 px-4 pb-3 pt-8 text-sm flex gap-x-2 items-center">
-                        <img src={profile.picture} alt="Profile" className="w-4 h-4 rounded-full ring-1 ring-white"/>
-                        <div>{post.date}</div>
-                        <div className="grow flex flex-row-reverse">{post.tags.sort().reverse().map(t => <Tag key={t} name={t}/>)}</div>
+                    <div className="absolute bottom-0 inset-x-0 text-white bg-gradient-to-t from-black/80 to-black/0 px-4 pb-4 pt-5 text-sm flex gap-x-4 items-center">
+                        <img src={profile.picture} alt="Profile" className="w-8 h-8 rounded-full ring-1 ring-white"/>
+                        <div className="text-xl">{since(new Date(post.date))} ago</div>
+                        <div className="grow flex flex-row-reverse gap-x-2">{post.tags.sort().reverse().map(t => <Tag key={t} name={t} big/>)}</div>
                     </div>
                 </div>
             </div>
@@ -117,7 +122,7 @@ const Post = ({ post, content, profile }: PostProps) => {
                 <div className="aspect-video" style={{ backgroundImage: `url('/img/screenshots/${post.screenshot}')`, backgroundSize: 'cover' }}></div>
                 <div className="absolute bottom-0 inset-x-0 text-white bg-gradient-to-t from-black/80 to-black/0 px-4 pb-3 pt-8 text-sm flex gap-x-2 items-center">
                     <img src={profile.picture} alt="Profile" className="w-4 h-4 rounded-full ring-1 ring-white"/>
-                    <div>{post.date}</div>
+                    <div>{since(new Date(post.date))} ago</div>
                     <div className="grow flex flex-row-reverse">{post.tags.sort().reverse().map(t => <Tag key={t} name={t}/>)}</div>
                 </div>
             </div>
