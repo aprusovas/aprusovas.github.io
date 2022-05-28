@@ -95,7 +95,7 @@ const App = ({ profile, posts, content }: AppProps) => {
 
     useEffect(() => {
         const promises: Promise<PostInfo>[] = []
-        posts.forEach(post => promises.push(load_post(`./posts/${post}.md`)))
+        posts.forEach(post => promises.push(load_post(`./projects/${post}.md`)))
         Promise.all(promises).then((posts) => {
             set_loaded_posts(prev => {
                 return [...prev, ...posts].sort((a, b) => {
