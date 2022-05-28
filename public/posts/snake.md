@@ -20,36 +20,3 @@ It's time for Snake time! This time I made classic Snake game using HTML5 canvas
 ```
 
 ### Thank you 🙏
-
-## Snake
-
-It's time for Snake time! This time I made classic Snake game using HTML5 canvas. Just for fun.
-
-### Final result
-
-```component-snake
-```
-
-### Thank you 🙏
-
-## Snake
-
-It's time for Snake time! This time I made classic Snake game using HTML5 canvas. Just for fun.
-
-### Final result
-
-```component-snake
-```
-
-### Thank you 🙏
-
-## Snake
-
-It's time for Snake time! This time I made classic Snake game using HTML5 canvas. Just for fun.
-
-### Final result
-
-```component-snake
-```
-
-### Thank you 🙏

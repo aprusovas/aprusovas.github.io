@@ -97,7 +97,7 @@ export const PostLoading = () => {
                     <div className="w-[400px] bg-slate-200 rounded-md h-[30px]"></div>
                 </div>
             </div>
-            <div className="relative bg-slate-400 h-[200px]"></div>
+            <div className="relative bg-slate-400 aspect-video"></div>
         </div>
     )
 }
@@ -114,7 +114,7 @@ const Post = ({ post, content, profile }: PostProps) => {
                 <div className="px-4 text-slate-700">{post.description}</div>
             </div>
             <div className="relative bg-slate-400">
-                <div className="h-[200px]" style={{ backgroundImage: `url('/img/screenshots/${post.screenshot}')`, backgroundSize: 'cover' }}></div>
+                <div className="aspect-video" style={{ backgroundImage: `url('/img/screenshots/${post.screenshot}')`, backgroundSize: 'cover' }}></div>
                 <div className="absolute bottom-0 inset-x-0 text-white bg-gradient-to-t from-black/80 to-black/0 px-4 pb-3 pt-8 text-sm flex gap-x-2 items-center">
                     <img src={profile.picture} alt="Profile" className="w-4 h-4 rounded-full ring-1 ring-white"/>
                     <div>{post.date}</div>

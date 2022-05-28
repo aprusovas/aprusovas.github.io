@@ -87,7 +87,9 @@ const App = ({ profile, posts, content }: AppProps) => {
         posts.forEach(path => promises.push(load_post(path)))
         Promise.all(promises).then((posts) => {
             set_loaded_posts(prev => {
-                return [...prev, ...posts]
+                return [...prev, ...posts].sort((a, b) => {
+                    return b.date.localeCompare(a.date)
+                })
             })
         }).catch(console.error)
     }, [posts])
@@ -114,7 +116,7 @@ const App = ({ profile, posts, content }: AppProps) => {
                             {posts.map(p => <PostLoading key={p}/>)}
                         </>
                 }
-                <Footer/>
+                <Footer profile={profile}/>
             </div>
         </div>
     )

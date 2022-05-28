@@ -19,7 +19,12 @@ const root = ReactDOM.createRoot(
 const profile: ProfileInfo = {
     title: 'Hi 👋',
     description: 'This is my random stuff ..',
-    picture: "/img/profile.jpg"
+    picture: "/img/profile.jpg",
+    urls: {
+        linkedin: "https://www.linkedin.com/in/aurimas-prusovas-713276212/",
+        facebook: "https://www.facebook.com/aurimas.prusovas/",
+        github: "https://github.com/aprusovas"
+    }
 }
 
 /**
