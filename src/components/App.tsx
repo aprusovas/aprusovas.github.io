@@ -35,8 +35,19 @@ const load_post = async (path: string): Promise<PostInfo> => {
         month: 'long',
         day: 'numeric'
     })
+
+    const result = { ...data.attributes, ...{ content: data.body } } as PostInfo
     
-    return { ...data.attributes, ...{ content: data.body } } as PostInfo
+    result.id = result.id ?? Math.random().toString()
+    result.title = result.title ?? 'Unknown'
+    result.description = result.description ?? 'Unknown description'
+    result.date = result.date ?? new Date().toString()
+    result.tags = result.tags ?? []
+    result.content = result.content ?? ''
+
+    console.log(`${path}: ${JSON.stringify(result)}`)
+
+    return result
 }
 
 const NoPosts = () => {
