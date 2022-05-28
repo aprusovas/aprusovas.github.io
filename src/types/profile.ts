@@ -28,4 +28,17 @@ export interface ProfileInfo {
          */
         github?: string
     }
+    /**
+     * Badges
+     */
+    badges: {
+        /**
+         * Skills
+         */
+        skills: string[]
+        /**
+         * Other badges
+         */
+        other: string[]
+    }
 }
