@@ -61,7 +61,7 @@ const Filters = ({ tags, selected_tags, on_select_tag, on_remove_tag }: FiltersP
         return <></>
     }
     return (
-        <div className="py-4">
+        <div className="py-4 pr-32 lg:pr-0 ">
             {
                 selected_tags.length > 0 &&
                     <>

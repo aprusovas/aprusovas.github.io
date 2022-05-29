@@ -46,18 +46,48 @@ const Tag = ({ name, big }: TagProps) => {
 
 const PostDialog = ({ post, content, profile, onToggleDialog }: PostDialogProps) => {
     const ref = useRef<HTMLDivElement>(null)
+    const [visible, setVisible] = useState(false)
+    const onCloseDropdown = () => {
+        setVisible(false)
+    }
 
     useEffect(() => {
+        const body_style = window.document.body.style
         if (ref.current) {
             ref.current.style.height = `${Math.min(1400, ref.current.scrollHeight, window.innerHeight - 12)}px`
         }
+
+        body_style.overflow = 'hidden'
+
+        return () => {
+            body_style.overflow = 'auto'
+        }
     }, [])
 
+    useEffect(() => {
+        setVisible(true)
+    }, [])
+
+    useEffect(() => {
+        let timer: NodeJS.Timeout | undefined = undefined
+        if (!visible) {
+            timer = setTimeout(() => {
+                onToggleDialog()
+            }, 200)
+        }
+
+        return () => {
+            if (timer) {
+                clearTimeout(timer)
+            }
+        }
+    }, [visible])
+
     return (
-        <div className="fixed inset-0 p-2 md:p-4 bg-black/10 z-10">
+        <div onClick={e => e.preventDefault()} className={`fixed inset-0 p-2 md:p-4 bg-black/10 z-10 transition-opacity ${visible ? `opacity-100` : `opacity-0`}`}>
             <div className="relative max-w-[500px] md:max-w-[700px] h-full m-auto flex items-center">
-                <div className="relative bg-white rounded-xl overflow-hidden z-10 shadow-lg ring-1 ring-slate-200">
-                    <div onClick={onToggleDialog} className="absolute right-6 top-6 text-2xl bg-slate-50/50 hover:bg-slate-100 rounded-full cursor-pointer p-2 z-10">
+                <div className={`relative bg-white rounded-xl overflow-hidden z-10 shadow-lg ring-1 ring-slate-200 transition-all ${visible ? `translate-y-0 opacity-100` : `translate-y-4 opacity-0`}`}>
+                    <div onClick={onCloseDropdown} className="absolute right-6 top-6 text-2xl bg-slate-50/50 hover:bg-slate-100 rounded-full cursor-pointer p-2 z-10">
                         <RiCloseFill />
                     </div>
                     <div ref={ref} className="p-6 pb-20 overflow-y-scroll">
@@ -82,7 +112,7 @@ const PostDialog = ({ post, content, profile, onToggleDialog }: PostDialogProps)
                     </div>
                     <div className="absolute bottom-0 inset-x-0 text-white bg-gradient-to-t from-black/80 to-black/0 px-4 pb-4 pt-5 text-sm flex gap-x-2 items-center">
                         <img src={profile.picture} alt="Profile" className="w-4 h-4 rounded-full ring-1 ring-white"/>
-                        <div>{since(new Date(post.date))} ago</div>
+                        <div className="truncate">{since(new Date(post.date))} ago</div>
                         <div className="grow flex flex-row-reverse">{post.tags.sort().reverse().map(t => <Tag key={t} name={t}/>)}</div>
                     </div>
                 </div>
@@ -113,7 +143,7 @@ const Post = ({ post, content, profile }: PostProps) => {
         set_visible(!visible)
     }
     return (
-        <div onClick={!visible ? onToggleDialog : undefined} className={`bg-white text-slate-800 shadow-lg shadow-slate-400/20 w-full rounded-lg overflow-hidden my-4 ${!visible && `hover:scale-[102%] cursor-pointer transition-transform`}`}>
+        <div onClick={!visible ? onToggleDialog : undefined} className="bg-white text-slate-800 shadow-lg shadow-slate-400/20 w-full rounded-lg overflow-hidden my-4 transition-all outline outline-offset-0 outline-none hover:outline-4 md:hover:outline-8 hover:outline-slate-600/40 cursor-pointer">
             <div className="py-3">
                 <div className="font-extrabold text-2xl px-4 py-1">{post.title}</div>
                 <div className="px-4 text-slate-700">{post.description}</div>

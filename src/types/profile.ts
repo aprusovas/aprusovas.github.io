@@ -12,6 +12,10 @@ export interface ProfileInfo {
      */
     picture: string
     /**
+     * Profile picture path for background
+     */
+    picture_bg: string
+    /**
      * Urls
      */
     urls: {
