@@ -81,10 +81,10 @@ const PostDialog = ({ post, content, profile, onToggleDialog }: PostDialogProps)
                 clearTimeout(timer)
             }
         }
-    }, [visible])
+    }, [onToggleDialog, visible])
 
     return (
-        <div onClick={e => e.preventDefault()} className={`fixed inset-0 p-2 md:p-4 bg-black/10 z-10 transition-opacity ${visible ? `opacity-100` : `opacity-0`}`}>
+        <div onClick={e => e.preventDefault()} className={`cursor-default fixed inset-0 p-2 md:p-4 bg-black/10 z-10 transition-opacity ${visible ? `opacity-100` : `opacity-0`}`}>
             <div className="relative max-w-[500px] md:max-w-[700px] h-full m-auto flex items-center">
                 <div className={`relative bg-white rounded-xl overflow-hidden z-10 shadow-lg ring-1 ring-slate-200 transition-all ${visible ? `translate-y-0 opacity-100` : `translate-y-4 opacity-0`}`}>
                     <div onClick={onCloseDropdown} className="absolute right-6 top-6 text-2xl bg-slate-50/50 hover:bg-slate-100 rounded-full cursor-pointer p-2 z-10">
@@ -143,7 +143,7 @@ const Post = ({ post, content, profile }: PostProps) => {
         set_visible(!visible)
     }
     return (
-        <div onClick={!visible ? onToggleDialog : undefined} className="bg-white text-slate-800 shadow-lg shadow-slate-400/20 w-full rounded-lg overflow-hidden my-4 transition-all outline outline-offset-0 outline-none hover:outline-4 md:hover:outline-8 hover:outline-slate-600/40 cursor-pointer">
+        <div onClick={!visible ? onToggleDialog : undefined} className="bg-white text-slate-800 shadow-lg shadow-slate-400/20 w-full rounded-lg overflow-hidden mb-7 mt-1 transition-all outline outline-offset-0 outline-none hover:outline-4 md:hover:outline-8 hover:outline-slate-600/40 cursor-pointer">
             <div className="py-3">
                 <div className="font-extrabold text-2xl px-4 py-1">{post.title}</div>
                 <div className="px-4 text-slate-700">{post.description}</div>

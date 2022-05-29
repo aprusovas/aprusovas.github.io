@@ -8,6 +8,10 @@ export interface ProfileInfo {
      */
     description: string
     /**
+     * Profile longer description
+     */
+    description_longer: string
+    /**
      * Profile picture path
      */
     picture: string
@@ -15,6 +19,10 @@ export interface ProfileInfo {
      * Profile picture path for background
      */
     picture_bg: string
+    /**
+     * Skills to show in the end of description
+     */
+    skills: string[]
     /**
      * Urls
      */

@@ -4,6 +4,7 @@ import Snake from './components/projects/snake/Snake';
 import './index.css';
 import { ContentInfo } from './types/content';
 import { ProfileInfo } from './types/profile';
+import { shuffle_array } from './utils/array';
 
 /**
  * Root component
@@ -17,7 +18,8 @@ const root = ReactDOM.createRoot(
  */
 const profile: ProfileInfo = {
     title: 'Hi 👋',
-    description: 'This is my random stuff ..',
+    description: 'Nice to meet you 🥳',
+    description_longer: 'This is me and I like to make random stuff 😅 to improve my skills like:',
     picture: "/img/profile.jpg",
     picture_bg: "/img/profile_bg.png",
     urls: {
@@ -25,6 +27,14 @@ const profile: ProfileInfo = {
         facebook: "https://www.facebook.com/aurimas.prusovas/",
         github: "https://github.com/aprusovas"
     },
+    skills: shuffle_array([
+        "typescript",
+        "javascript",
+        "c++",
+        "react",
+        "mongodb",
+        "redis"
+    ]),
     badges: {
         skills: [
             "https://img.shields.io/badge/C%23-239120?style=for-the-badge&logo=c-sharp&logoColor=white",

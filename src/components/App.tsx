@@ -5,7 +5,7 @@ import Filters, { FiltersLoading } from "./Filters";
 import Footer from "./Footer";
 import Post, { PostLoading } from './Post';
 import Profile from "./Profile";
-import { BsClipboard } from 'react-icons/bs';
+import { BsClipboard, BsArrowUp } from 'react-icons/bs';
 import { PostInfo } from "../types/post";
 
 const fm = require('front-matter')
@@ -30,11 +30,13 @@ const load_post = async (path: string): Promise<PostInfo> => {
     const content = await response.text()
     const data = fm(content)
     
-    data.attributes.date = new Date(data.attributes.date).toLocaleDateString("en-US", {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric'
-    })
+    if (data.attributes.date) {
+        data.attributes.date = new Date(data.attributes.date).toLocaleDateString("en-US", {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+        })
+    }
 
     const result = { ...data.attributes, ...{ content: data.body } } as PostInfo
     
@@ -59,12 +61,21 @@ const NoPosts = () => {
     )
 }
 
+const GoUp = () => {
+    const onGoUp = () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' })
+    }
+    return (
+        <div onClick={onGoUp} className="text-slate-700 hover:text-slate-800 hover:bg-slate-200 bg-slate-100 rounded-full cursor-pointer w-9 h-9 flex items-center justify-center transition-all m-auto" title="Go up">
+            <BsArrowUp/>
+        </div>
+    )
+}
+
 const App = ({ profile, posts, content }: AppProps) => {
     const [loaded_posts, set_loaded_posts] = useState<PostInfo[]>([])
     const [selected_tags, set_selected_tags] = useState<string[]>([])
 
-    const all_tags = new Set(loaded_posts.reduce<string[]>((prev, curr) => { prev.push(...curr.tags); return prev }, []))
-    const available_tags = Array.from(all_tags).sort().filter(t => !selected_tags.includes(t))
     const filtered_posts = loaded_posts.filter((post) => {
         if (selected_tags.length <= 0) {
             return true
@@ -77,6 +88,9 @@ const App = ({ profile, posts, content }: AppProps) => {
         }
         return found
     })
+
+    const all_tags = new Set(filtered_posts.reduce<string[]>((prev, curr) => { prev.push(...curr.tags); return prev }, []))
+    const available_tags = filtered_posts.length > 1 ? Array.from(all_tags).sort().filter(t => !selected_tags.includes(t)) : []
 
     const onSelectTagHandler = (tag: string) => {
         set_selected_tags(prev => {
@@ -120,7 +134,14 @@ const App = ({ profile, posts, content }: AppProps) => {
                                 on_select_tag={onSelectTagHandler}
                                 on_remove_tag={onRemoveTagHandler}/>
                             {filtered_posts.length <= 0 && <NoPosts/>}
+                            {
+                                selected_tags.length > 0 && filtered_posts.length > 0 &&
+                                    <div className="text-xs text-slate-500 uppercase font-semibold pb-1">
+                                        filtered {filtered_posts.length} post{filtered_posts.length !== 1 && 's'}:
+                                    </div>
+                            }
                             {filtered_posts.map(p => <Post key={p.id} post={p} profile={profile} content={content}/>)}
+                            <GoUp/>
                         </> :
                         <>
                             <FiltersLoading/>

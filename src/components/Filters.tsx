@@ -65,7 +65,9 @@ const Filters = ({ tags, selected_tags, on_select_tag, on_remove_tag }: FiltersP
             {
                 selected_tags.length > 0 &&
                     <>
-                        <div className="text-xs text-slate-500 uppercase font-semibold pb-1">selected</div>
+                        <div className="text-xs text-slate-500 uppercase font-semibold pb-1">
+                            selected{tags.length <= 0 && ' filters'}:
+                        </div>
                         <div className="flex gap-1 pb-4">
                             {selected_tags.map(t => <Filter key={t} name={t} onClick={() => { on_remove_tag(t) }} remove/>)}
                         </div>
@@ -74,7 +76,9 @@ const Filters = ({ tags, selected_tags, on_select_tag, on_remove_tag }: FiltersP
             {
                 tags.length > 0 &&
                     <>
-                        <div className="text-xs text-slate-500 uppercase font-semibold pb-1">{selected_tags.length > 0 && 'available '}filters</div>
+                        <div className="text-xs text-slate-500 uppercase font-semibold pb-1">
+                            {selected_tags.length > 0 && 'available '}filters:
+                        </div>
                         <div className="flex gap-1">
                             {tags.map(t => <Filter key={t} name={t} onClick={() => { on_select_tag(t) }}/>)}
                         </div>
