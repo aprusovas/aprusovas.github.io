@@ -7,6 +7,8 @@ import { ContentInfo } from "../types/content";
 import { PostInfo } from "../types/post";
 import { ProfileInfo } from "../types/profile";
 import { since } from "../utils/time";
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
+import { dracula } from 'react-syntax-highlighter/dist/esm/styles/prism'
 
 interface TagProps {
     /**
@@ -96,13 +98,28 @@ const PostDialog = ({ post, content, profile, onToggleDialog }: PostDialogProps)
                                 rehypePlugins={[rehypeRaw]}
                                 components={{
                                     pre: ({ children }: any) => {
-                                        return <>{children}</>
+                                        return <div>{children}</div>
                                     },
-                                    code: ({ className, children, node }: CodeProps) => {
+                                    code: ({ className, children, inline, ...props }: CodeProps) => {
                                         if (className && className.startsWith('language-component-')) {
                                             return content[className.slice(19)] as any ?? <div>NOT FOUND</div>
                                         }
-                                        return <code>{children}</code>
+                                        const match = /language-(\w+)/.exec(className || '')
+                                        return !inline && match ? (
+                                          <SyntaxHighlighter
+                                            children={String(children).replace(/\n$/, '')}
+                                            style={dracula as any}
+                                            language={match[1]}
+                                            PreTag="div"
+                                            showLineNumbers
+                                            wrapLines
+                                            {...props}
+                                          />
+                                        ) : (
+                                          <code className={className} {...props}>
+                                            {children}
+                                          </code>
+                                        )
                                     }
                                 }}
                             >
@@ -156,8 +173,8 @@ const Post = ({ post, content, profile }: PostProps) => {
                         <div className="aspect-video" style={{ backgroundImage: `url('/img/screenshots/${post.screenshot}')`, backgroundSize: 'cover' }}></div> :
                         <div className="my-12"></div>
                 }
-                <div className={`absolute bottom-0 inset-x-0 text-white bg-gradient-to-t from-black/80 to-black/0 px-4 pb-3 pt-4 text-sm flex gap-x-2 items-center ${post.screenshot ? `pt-8` : `pt-4`}`}>
-                    <img src={profile.picture} alt="Profile" className="w-4 h-4 rounded-full ring-1 ring-white"/>
+                <div className={`absolute bottom-0 inset-x-0 text-white bg-gradient-to-t from-black/80 to-black/0 pl-4 pr-2 pb-3 pt-4 text-sm flex gap-x-2 items-center ${post.screenshot ? `pt-8` : `pt-4`}`}>
+                    {post.date !== "upcoming" && <img src={profile.picture} alt="Profile" className="w-4 h-4 rounded-full ring-1 ring-white"/>}
                     <div className="truncate">
                         {post.date === "upcoming" ? `Comming soon` : `${since(new Date(post.date))} ago`}
                     </div>

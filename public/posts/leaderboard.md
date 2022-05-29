@@ -6,7 +6,6 @@ date: "upcoming"
 tags:
   - "leaderboard"
   - "firebase"
-  - "snake"
 ---
 
 ## Leaderboard using Firebase
