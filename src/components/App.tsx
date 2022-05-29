@@ -30,7 +30,7 @@ const load_post = async (path: string): Promise<PostInfo> => {
     const content = await response.text()
     const data = fm(content)
     
-    if (data.attributes.date) {
+    if (data.attributes.date && data.attributes.date !== "upcoming") {
         data.attributes.date = new Date(data.attributes.date).toLocaleDateString("en-US", {
             year: 'numeric',
             month: 'long',
@@ -141,13 +141,13 @@ const App = ({ profile, posts, content }: AppProps) => {
                                     </div>
                             }
                             {filtered_posts.map(p => <Post key={p.id} post={p} profile={profile} content={content}/>)}
-                            <GoUp/>
                         </> :
                         <>
-                            <FiltersLoading/>
+                            {<FiltersLoading/>}
                             {posts.map(p => <PostLoading key={p}/>)}
                         </>
                 }
+                <GoUp/>
                 <Footer profile={profile}/>
             </div>
         </div>

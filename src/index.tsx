@@ -19,7 +19,7 @@ const root = ReactDOM.createRoot(
 const profile: ProfileInfo = {
     title: 'Hi 👋',
     description: 'Nice to meet you 🥳',
-    description_longer: 'This is me and I like to make random stuff 😅 to improve my skills like:',
+    description_longer: 'This is me and I like to make random stuff 😅 to improve skills like ',
     picture: "/img/profile.jpg",
     picture_bg: "/img/profile_bg.png",
     urls: {
@@ -28,12 +28,12 @@ const profile: ProfileInfo = {
         github: "https://github.com/aprusovas"
     },
     skills: shuffle_array([
-        "typescript",
-        "javascript",
-        "c++",
-        "react",
-        "mongodb",
-        "redis"
+        "TypeScript",
+        "JavaScript",
+        "C++",
+        "React",
+        "MongoDB",
+        "Redis"
     ]),
     badges: {
         skills: [
@@ -106,7 +106,8 @@ const content: ContentInfo = {
  * Posts
  */
 const posts: string[] = [
-    "snake"
+    "snake",
+    "leaderboard"
 ]
 
 root.render(

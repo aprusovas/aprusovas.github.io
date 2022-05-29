@@ -75,7 +75,7 @@ const SkillSet = ({ skills }: SkillSetProps) => {
                     }
                 break
             }
-        }, action === "add" && Math.random() > 0.9 ? 300 : 50)
+        }, 50)
 
         return () => {
             clearTimeout(wait_timer)
@@ -84,7 +84,7 @@ const SkillSet = ({ skills }: SkillSetProps) => {
     }, [action, index, skills, text, text?.length])
 
     return (
-        <div className="items-center contents font-semibold">
+        <div className="items-center contents">
             {text}
             {<SkillSetCursor blink={skills[index] === text || (text?.length ?? 0) <= 0}/>}
         </div>
@@ -96,11 +96,15 @@ const Profile = ({ profile }: ProfileProps) => {
         <>
             <div className="pt-12 pb-8 md:pb-4 flex items-center text-left px-4 md:px-0 md:gap-x-2">
                 <div className="grow pt-4 pr-32 md:pt-0 lg:pr-0">
-                    <div className="text-black font-extrabold text-2xl py-1">{profile.title}</div>
+                    <div className="text-black font-extrabold text-2xl pt-1 pb-3">{profile.title}</div>
                     <div className="text-slate-700 font-medium">
-                        <p className="pb-2">{profile.description}</p>
-                        <p className="pb-2">{profile.description_longer}</p>
-                        <SkillSet skills={profile.skills}/>
+                        <p className="pb-2">
+                            {profile.description}
+                        </p>
+                        <p className="pb-2">
+                            {profile.description_longer}
+                            <SkillSet skills={profile.skills.map(s => `${s}.`)}/>
+                        </p>
                     </div>
                 </div>
             </div>

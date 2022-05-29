@@ -18,7 +18,7 @@ export interface PostInfo {
     /**
      * Date
      */
-    date: string
+    date: string | "upcoming"
     /**
      * Markdown content
      */
