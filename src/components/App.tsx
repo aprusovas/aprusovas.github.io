@@ -69,7 +69,7 @@ const OpenTerminalButton = () => {
     }
     return (
         <div className="px-4 md:px-0">
-            <div onClick={onClick} className={`rounded-md text-white text-xs uppercase px-2 py-1 cursor-pointer transition-colors flex items-center gap-x-2 bg-slate-600 hover:bg-slate-900 w-fit`}>
+            <div onClick={onClick} className={`rounded-md text-white text-xs uppercase px-2 py-1 cursor-pointer transition-colors flex items-center gap-x-2 bg-green-600 hover:bg-green-700 w-fit`}>
                 <BsTerminal/>
                 Terminal
                 {open && <RiCloseFill/>}
