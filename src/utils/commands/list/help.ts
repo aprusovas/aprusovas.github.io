@@ -1,15 +1,16 @@
 import { ICommand, IExecutor } from "../registry";
 
-class HelpCommand implements ICommand {
+class HelpCommand implements ICommand<void> {
     name: string = 'help'
+    description: string = 'Show commands'
     constructor(private readonly executor: IExecutor) {}
 
-    async run(...args: any[]): Promise<string> {
-        let lines = ''
+    async run(): Promise<string> {
+        const lines: string[] = []
         this.executor.commands.forEach((cmd) => {
-            lines += `${cmd}\n`
+            lines.push(`${(" ".repeat(10) + cmd.name).slice(-10 )}: ${cmd.description}`)
         })
-        return lines
+        return lines.join('\n')
     }
 }
 

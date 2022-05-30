@@ -38,7 +38,7 @@ const SkillSetCursor = ({ blink }: SkillSetCursorProps) => {
             clearTimeout(timer)
         }
     }, [blink, visible])
-    return <div className={`inline border border-r border-r-slate-800 h-[18px] ml-[1px] ${visible ? `visible` : `invisible`}`}/>
+    return <div className={`inline border border-r border-r-slate-800 h-[18px] ml-[1px] ${visible ? `visible` : `invisible`}`}></div>
 }
 
 const SkillSet = ({ skills }: SkillSetProps) => {
@@ -98,13 +98,13 @@ const Profile = ({ profile }: ProfileProps) => {
                 <div className="grow pt-4 pr-32 md:pt-0 lg:pr-0">
                     <div className="text-black font-extrabold text-2xl pt-1 pb-3">{profile.title}</div>
                     <div className="text-slate-700 font-medium">
-                        <p className="pb-2">
+                        <div className="pb-2">
                             {profile.description}
-                        </p>
-                        <p className="pb-2">
+                        </div>
+                        <div className="pb-2">
                             {profile.description_longer}
                             <SkillSet skills={profile.skills.map(s => `${s}.`)}/>
-                        </p>
+                        </div>
                     </div>
                 </div>
             </div>

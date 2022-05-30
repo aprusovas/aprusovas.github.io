@@ -1,10 +1,12 @@
 import ReactDOM from 'react-dom/client';
 import App from './components/App';
 import Snake from './components/projects/snake/Snake';
+import Terminal from './components/projects/terminal/Terminal';
 import './index.css';
 import { ContentInfo } from './types/content';
 import { ProfileInfo } from './types/profile';
 import { shuffle_array } from './utils/array';
+import { global_executor } from './utils/commands/registry';
 
 /**
  * Root component
@@ -99,7 +101,8 @@ const profile: ProfileInfo = {
  * Content
  */
 const content: ContentInfo = {
-    snake: <Snake/>
+    snake: <Snake/>,
+    terminal: <Terminal title="terminal for custom commands" executor={global_executor}/>
 }
 
 /**

@@ -49,9 +49,7 @@ const load_post = async (path: string): Promise<PostInfo> => {
     result.date = result.date ?? new Date().toString()
     result.tags = result.tags ?? []
     result.content = result.content ?? ''
-
-    console.log(`${path}: ${JSON.stringify(result)}`)
-
+    
     return result
 }
 
@@ -76,7 +74,7 @@ const GoUpButton = () => {
 }
 
 const OpenTerminalButton = () => {
-    const [open, setOpen] = useState(true)
+    const [open, setOpen] = useState(false)
     const onClick = () => {
         setOpen(!open)
     }
@@ -90,7 +88,7 @@ const OpenTerminalButton = () => {
             {
                 open &&
                     <div className="rounded-lg my-2 overflow-hidden">
-                        <Terminal executor={global_executor} onClose={onClick}/>
+                        <Terminal title="home" executor={global_executor} onClose={onClick} autoFocus/>
                     </div>
             }
         </div>
