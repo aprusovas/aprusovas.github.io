@@ -79,7 +79,7 @@ const Terminal = ({ title, onClose, autoFocus, executor }: TerminalProps) => {
                             <div className="h-3 w-3 bg-red-500 rounded-full cursor-pointer group pointer-events-auto" onClick={onClose}>
                                 <RiCloseFill className="text-gray-800 text-xs invisible group-hover:visible"/>
                             </div> :
-                            <div className="ml-2 h-3 w-3 bg-gray-400 rounded-full"></div>
+                            <div className="h-3 w-3 bg-gray-400 rounded-full"></div>
                     }
                     <div className="ml-2 h-3 w-3 bg-gray-400 rounded-full"></div>
                     <div className="ml-2 h-3 w-3 bg-gray-400 rounded-full"></div>
