@@ -49,8 +49,8 @@ export const FiltersLoading = () => {
         <div className="py-4">
             <div className="text-xs text-slate-500 uppercase font-semibold pb-1">filters</div>
             <div className="flex gap-1">
-                <Filter name={<div className="w-8 h-4"></div>}/>
-                <Filter name={<div className="w-6"></div>}/>
+                <Filter name={<div className="w-8 h-4 text-center">••••</div>}/>
+                <Filter name={<div className="w-6 text-center">••</div>}/>
             </div>
         </div>
     )

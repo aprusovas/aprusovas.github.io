@@ -5,7 +5,7 @@ import Filters, { FiltersLoading } from "./Filters";
 import Footer from "./Footer";
 import Post, { PostLoading } from './Post';
 import Profile from "./Profile";
-import { BsClipboard, BsArrowUp, BsTerminal, } from 'react-icons/bs';
+import { BsClipboard, BsTerminal, } from 'react-icons/bs';
 import { RiCloseFill } from "react-icons/ri"
 import { PostInfo } from "../types/post";
 import Terminal from "./projects/terminal/Terminal";
@@ -58,17 +58,6 @@ const NoPosts = () => {
         <div className="text-center text-xl font-semibold text-slate-600 py-16">
             <BsClipboard className="m-auto text-6xl pb-2"/>
             <div>No posts found..</div>
-        </div>
-    )
-}
-
-const GoUpButton = () => {
-    const onClick = () => {
-        window.scrollTo({ top: 0, behavior: 'smooth' })
-    }
-    return (
-        <div onClick={onClick} className="text-slate-700 hover:text-slate-800 hover:bg-slate-200 bg-slate-100 rounded-full cursor-pointer w-9 h-9 flex items-center justify-center transition-all m-auto" title="Go up">
-            <BsArrowUp/>
         </div>
     )
 }
@@ -131,15 +120,25 @@ const App = ({ profile, posts, content }: AppProps) => {
     }
 
     useEffect(() => {
+        let timer: NodeJS.Timeout | undefined = undefined
+        
         const promises: Promise<PostInfo>[] = []
+
         posts.forEach(post => promises.push(load_post(`./posts/${post}.md`)))
+
         Promise.all(promises).then((posts) => {
-            set_loaded_posts(prev => {
-                return [...prev, ...posts].sort((a, b) => {
-                    return b.date.localeCompare(a.date)
+            timer = setTimeout(() => {
+                set_loaded_posts(prev => {
+                    return [...prev, ...posts].sort((a, b) => {
+                        return b.date.localeCompare(a.date)
+                    })
                 })
-            })
+            }, 1_000)
         }).catch(console.error)
+
+        return () => {
+            clearTimeout(timer)
+        }
     }, [posts])
 
     return (
@@ -171,7 +170,6 @@ const App = ({ profile, posts, content }: AppProps) => {
                             {posts.map(p => <PostLoading key={p}/>)}
                         </>
                 }
-                <GoUpButton/>
                 <Footer profile={profile}/>
             </div>
         </div>

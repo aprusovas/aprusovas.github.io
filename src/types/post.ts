@@ -27,4 +27,8 @@ export interface PostInfo {
      * Screenshot path
      */
     screenshot?: string
+    /**
+     * Screenshot height
+     */
+    screenshot_height?: string
 }

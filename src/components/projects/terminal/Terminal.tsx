@@ -16,12 +16,9 @@ interface TerminalProps {
 const Terminal = ({ title, onClose, autoFocus, executor }: TerminalProps) => {
     const [history, setHistory] = useStickyState<(string | { value: string })[]>([], 'terminal-history')
     const [text, setText] = useState("")
-
     const ref = useRef<HTMLInputElement>(null)
     const bodyRef = useRef<HTMLDivElement>(null)
-
     const hostname = window.location.hostname
-
     const onBodyClick = useCallback(() => {
         ref.current?.focus()
     }, [])

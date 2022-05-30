@@ -151,7 +151,7 @@ export const PostLoading = () => {
                     <div className="max-w-[400px] bg-slate-200 rounded-md h-[35px]"></div>
                 </div>
             </div>
-            <div className="relative bg-slate-400 aspect-video"></div>
+            <div className="relative bg-slate-400 h-[200px]"></div>
         </div>
     )
 }
@@ -170,7 +170,7 @@ const Post = ({ post, content, profile }: PostProps) => {
             <div className="relative bg-slate-400">
                 {
                     post.screenshot ?
-                        <div className="aspect-video" style={{ backgroundImage: `url('/img/screenshots/${post.screenshot}')`, backgroundSize: 'cover' }}></div> :
+                        <div className={`${!post.screenshot_height && 'aspect-video'}`} style={{ backgroundImage: `url('/img/screenshots/${post.screenshot}')`, backgroundSize: 'cover', height: post.screenshot_height }}></div> :
                         <div className="my-12"></div>
                 }
                 <div className={`absolute bottom-0 inset-x-0 text-white bg-gradient-to-t from-black/80 to-black/0 pl-4 pr-2 pb-3 pt-4 text-sm flex gap-x-2 items-center ${post.screenshot ? `pt-8` : `pt-4`}`}>

@@ -3,6 +3,7 @@ id: "terminal"
 title: "Terminal for custom commands"
 description: "I decided to make terminal for my registered custom commands, for example `export cv`, etc.."
 screenshot: "terminal.png"
+screenshot_height: "120px"
 date: "2022-05-30"
 tags:
   - "terminal"
