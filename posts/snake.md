@@ -3,6 +3,7 @@ id: "snake"
 title: "Classic Snake game"
 description: "It's time for Snake time! This time I made a classic Snake game using HTML5 canvas.."
 screenshot: "snake.png"
+screenshot_height: "230px"
 date: "2022-05-26"
 tags:
   - "game"
