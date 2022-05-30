@@ -5,8 +5,11 @@ import Filters, { FiltersLoading } from "./Filters";
 import Footer from "./Footer";
 import Post, { PostLoading } from './Post';
 import Profile from "./Profile";
-import { BsClipboard, BsArrowUp } from 'react-icons/bs';
+import { BsClipboard, BsArrowUp, BsTerminal, } from 'react-icons/bs';
+import { RiCloseFill } from "react-icons/ri"
 import { PostInfo } from "../types/post";
+import Terminal from "./projects/terminal/Terminal";
+import { global_executor } from "../utils/commands/registry";
 
 const fm = require('front-matter')
 
@@ -61,13 +64,35 @@ const NoPosts = () => {
     )
 }
 
-const GoUp = () => {
-    const onGoUp = () => {
+const GoUpButton = () => {
+    const onClick = () => {
         window.scrollTo({ top: 0, behavior: 'smooth' })
     }
     return (
-        <div onClick={onGoUp} className="text-slate-700 hover:text-slate-800 hover:bg-slate-200 bg-slate-100 rounded-full cursor-pointer w-9 h-9 flex items-center justify-center transition-all m-auto" title="Go up">
+        <div onClick={onClick} className="text-slate-700 hover:text-slate-800 hover:bg-slate-200 bg-slate-100 rounded-full cursor-pointer w-9 h-9 flex items-center justify-center transition-all m-auto" title="Go up">
             <BsArrowUp/>
+        </div>
+    )
+}
+
+const OpenTerminalButton = () => {
+    const [open, setOpen] = useState(true)
+    const onClick = () => {
+        setOpen(!open)
+    }
+    return (
+        <div className="px-4 md:px-0">
+            <div onClick={onClick} className={`rounded-md text-white text-xs uppercase px-2 py-1 cursor-pointer transition-colors flex items-center gap-x-2 bg-slate-600 hover:bg-slate-900 w-fit`}>
+                <BsTerminal/>
+                Terminal
+                {open && <RiCloseFill/>}
+            </div>
+            {
+                open &&
+                    <div className="rounded-lg my-2 overflow-hidden">
+                        <Terminal executor={global_executor} onClose={onClick}/>
+                    </div>
+            }
         </div>
     )
 }
@@ -123,6 +148,7 @@ const App = ({ profile, posts, content }: AppProps) => {
         <div className="max-w-[500px] m-auto grid gap-y-4">
             <div className="md:px-4">
                 <Profile profile={profile}/>
+                <OpenTerminalButton/>
             </div>
             <div className="px-4">
                 {
@@ -147,7 +173,7 @@ const App = ({ profile, posts, content }: AppProps) => {
                             {posts.map(p => <PostLoading key={p}/>)}
                         </>
                 }
-                <GoUp/>
+                <GoUpButton/>
                 <Footer profile={profile}/>
             </div>
         </div>

@@ -38,7 +38,7 @@ const SkillSetCursor = ({ blink }: SkillSetCursorProps) => {
             clearTimeout(timer)
         }
     }, [blink, visible])
-    return <div className={`inline border border-r border-r-slate-800 h-[18px] ml-[1px] ${visible ? `visible` : `invisible`}`}></div>
+    return <div className={`inline border border-r border-r-slate-800 h-[18px] ml-[1px] ${visible ? `visible` : `invisible`}`}/>
 }
 
 const SkillSet = ({ skills }: SkillSetProps) => {

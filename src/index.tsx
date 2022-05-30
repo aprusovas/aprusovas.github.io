@@ -107,7 +107,7 @@ const content: ContentInfo = {
  */
 const posts: string[] = [
     "snake",
-    "leaderboard"
+    "terminal"
 ]
 
 root.render(
