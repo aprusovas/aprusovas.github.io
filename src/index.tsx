@@ -25,8 +25,8 @@ const profile: ProfileInfo = {
     picture: "/img/profile.jpg",
     picture_bg: "/img/profile_bg.png",
     urls: {
-        linkedin: "https://www.linkedin.com/in/aurimas-prusovas-713276212/",
-        facebook: "https://www.facebook.com/aurimas.prusovas/",
+        linkedin: "https://www.linkedin.com/in/aprusovas",
+        facebook: "https://www.facebook.com/aurimas.prusovas",
         github: "https://github.com/aprusovas"
     },
     skills: shuffle_array([
