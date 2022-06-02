@@ -1,6 +1,8 @@
 
 import { ChangeEvent, KeyboardEvent, useCallback, useEffect, useRef, useState } from "react"
 import { RiCloseFill } from "react-icons/ri"
+import { FiMinus } from "react-icons/fi"
+import { BsChevronExpand } from "react-icons/bs"
 import useStickyState from "../../../hooks/useStickyState"
 import { global_executor, IExecutor } from "../../../utils/commands/registry"
 
@@ -9,12 +11,16 @@ const MAX_HISTORY = 100
 interface TerminalProps {
     title?: string
     onClose?: () => void
+    onResize?: () => void
+    onEnlarge?: () => void
     autoFocus?: boolean
     executor: IExecutor
 }
 
-const Terminal = ({ title, onClose, autoFocus, executor }: TerminalProps) => {
+const Terminal = ({ title, onClose, onResize, onEnlarge, autoFocus, executor }: TerminalProps) => {
     const [history, setHistory] = useStickyState<(string | { value: string })[]>([], 'terminal-history')
+    const [large, setLarge] = useState(false)
+    const [minimized, setMinimized] = useState(false)
     const [text, setText] = useState("")
     const ref = useRef<HTMLInputElement>(null)
     const bodyRef = useRef<HTMLDivElement>(null)
@@ -56,6 +62,16 @@ const Terminal = ({ title, onClose, autoFocus, executor }: TerminalProps) => {
         setHistory([])
     }, [setHistory])
 
+    const onEnlargeHandler = useCallback(() => {
+        setLarge(!large)
+        onEnlarge?.()
+    }, [large, onEnlarge])
+
+    const onResizeHandler = useCallback(() => {
+        setMinimized(!minimized)
+        onResize?.()
+    }, [minimized, onResize])
+
     useEffect(() => {
         bodyRef.current?.scrollTo(0, bodyRef.current.scrollHeight)
     }, [text, history])
@@ -68,52 +84,67 @@ const Terminal = ({ title, onClose, autoFocus, executor }: TerminalProps) => {
     }, [onClear])
 
     return (
-        <div className="bg-gray-800 w-full shadow-lg text-gray-100 text-sm font-mono subpixel-antialiased rounded-lg leading-normal overflow-hidden">
-            <div className="relative bg-gray-300 text-gray-900 px-4 py-3 flex items-center pointer-events-none">
+        <div className={`bg-gray-800 shadow-lg text-gray-100 text-sm font-mono subpixel-antialiased rounded-lg leading-normal overflow-hidden transition-all ${large ? `fixed z-50 w-auto ${!minimized ? 'inset-4' : 'inset-x-4 top-4'}` : `w-full`}`}>
+            <div className="relative bg-gray-300 text-gray-900 px-4 py-3 flex items-center pointer-events-none group">
                 <div className="flex">
                     {
                         onClose ?
-                            <div className="h-3 w-3 bg-red-500 rounded-full cursor-pointer group pointer-events-auto" onClick={onClose}>
+                            <div className="h-3 w-3 bg-red-500 rounded-full cursor-pointer pointer-events-auto" onClick={onClose}>
                                 <RiCloseFill className="text-gray-800 text-xs invisible group-hover:visible"/>
                             </div> :
                             <div className="h-3 w-3 bg-gray-400 rounded-full"></div>
                     }
-                    <div className="ml-2 h-3 w-3 bg-gray-400 rounded-full"></div>
-                    <div className="ml-2 h-3 w-3 bg-gray-400 rounded-full"></div>
+                    {
+                        onResize ?
+                            <div className="ml-2 h-3 w-3 bg-yellow-500 rounded-full cursor-pointer pointer-events-auto" onClick={onResizeHandler}>
+                                <FiMinus className="text-gray-800 text-xs invisible group-hover:visible"/>
+                            </div> :
+                            <div className="ml-2 h-3 w-3 bg-gray-400 rounded-full"></div>
+                    }
+                    {
+                        onEnlarge ?
+                            <div className="ml-2 h-3 w-3 bg-green-500 rounded-full cursor-pointer pointer-events-auto" onClick={onEnlargeHandler}>
+                                <BsChevronExpand className="text-gray-800 text-xs invisible group-hover:visible -rotate-45"/>
+                            </div> :
+                            <div className="ml-2 h-3 w-3 bg-gray-400 rounded-full"></div>
+                    }
                 </div>
                 <div className="absolute left-1/2 -translate-x-1/2 lowercase">{title}</div>
             </div>
-            <div ref={bodyRef} onClick={onBodyClick} className="px-4 py-3 text-xs cursor-text min-h-[250px] max-h-[300px] overflow-y-scroll w-full">
-                {
-                    history.map((t, index) => {
-                        return (
-                            typeof t === 'string' ?
-                                <div key={index} className="flex">
-                                    <span className="text-green-400 pr-1">{hostname}:~$</span>
-                                    <div className="pre-break-all">{t}</div>
-                                </div> :
-                                <div key={index} className="pre-break-all">{t.value}</div>
-                        )
-                    })
-                }
-                <div className="flex">
-                    <span className="text-green-400 pr-1">{hostname}:~$</span>
-                    <div className="flex-1 typing items-center">
-                        <input
-                            ref={ref}
-                            onKeyDown={onKeyDown}
-                            onChange={onTextChange}
-                            value={text}
-                            type="text"
-                            className="bg-transparent outline-none w-full"
-                            autoComplete="false"
-                            autoCorrect="false"
-                            autoCapitalize="none"
-                            autoFocus={autoFocus}
-                        />
+            {
+                !minimized &&
+                <div ref={bodyRef} onClick={onBodyClick} className={`px-4 py-3 text-xs cursor-text overflow-y-scroll w-full ${large ? `` : `min-h-[250px] max-h-[300px]`}`} style={{ height: large ? 'calc(100% - 36px)' : '' }}>
+                    {
+                        history.map((t, index) => {
+                            return (
+                                typeof t === 'string' ?
+                                    <div key={index} className="flex">
+                                        <span className="text-green-400 pr-1">{hostname}:~$</span>
+                                        <div className="pre-break-all">{t}</div>
+                                    </div> :
+                                    <div key={index} className="pre-break-all">{t.value}</div>
+                            )
+                        })
+                    }
+                    <div className="flex">
+                        <span className="text-green-400 pr-1">{hostname}:~$</span>
+                        <div className="flex-1 typing items-center">
+                            <input
+                                ref={ref}
+                                onKeyDown={onKeyDown}
+                                onChange={onTextChange}
+                                value={text}
+                                type="text"
+                                className="bg-transparent outline-none w-full"
+                                autoComplete="false"
+                                autoCorrect="false"
+                                autoCapitalize="none"
+                                autoFocus={autoFocus}
+                            />
+                        </div>
                     </div>
                 </div>
-            </div>
+            }
         </div>
     )
 }

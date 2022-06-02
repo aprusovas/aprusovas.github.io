@@ -86,7 +86,7 @@ const PostDialog = ({ post, content, profile, onToggleDialog }: PostDialogProps)
     }, [onToggleDialog, visible])
 
     return (
-        <div onClick={e => e.preventDefault()} className={`cursor-default fixed inset-0 p-2 md:p-4 bg-black/10 z-10 transition-opacity ${visible ? `opacity-100` : `opacity-0`}`}>
+        <div onClick={e => e.preventDefault()} className={`cursor-default fixed inset-0 p-2 md:p-4 bg-black/40 z-10 transition-opacity ${visible ? `opacity-100` : `opacity-0`}`}>
             <div className="relative max-w-[500px] md:max-w-[700px] h-full m-auto flex items-center">
                 <div className={`w-full relative bg-white rounded-xl overflow-hidden z-10 shadow-lg ring-1 ring-slate-200 transition-all ${visible ? `translate-y-0 opacity-100` : `translate-y-4 opacity-0`}`}>
                     <div onClick={onCloseDropdown} className="absolute right-6 top-6 text-2xl bg-slate-50/50 hover:bg-slate-100 rounded-full cursor-pointer p-2 z-10">

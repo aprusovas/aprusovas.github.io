@@ -77,7 +77,14 @@ const OpenTerminalButton = () => {
             {
                 open &&
                     <div className="rounded-lg my-2 overflow-hidden">
-                        <Terminal title="home" executor={global_executor} onClose={onClick} autoFocus/>
+                        <Terminal
+                            title="home"
+                            executor={global_executor}
+                            onClose={onClick}
+                            onResize={() => {}}
+                            onEnlarge={() => {}}
+                            autoFocus
+                        />
                     </div>
             }
         </div>
@@ -127,13 +134,13 @@ const App = ({ profile, posts, content }: AppProps) => {
         posts.forEach(post => promises.push(load_post(`./posts/${post}.md`)))
 
         Promise.all(promises).then((posts) => {
-            timer = setTimeout(() => {
+            // timer = setTimeout(() => {
                 set_loaded_posts(prev => {
                     return [...prev, ...posts].sort((a, b) => {
                         return b.date.localeCompare(a.date)
                     })
                 })
-            }, 1_000)
+            // }, 1_000)
         }).catch(console.error)
 
         return () => {

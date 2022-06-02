@@ -2,6 +2,8 @@ import { ReactNode } from "react"
 import { ProfileInfo } from "../types/profile"
 import { BsFacebook, BsGithub, BsLinkedin } from 'react-icons/bs';
 import { BsArrowUp } from 'react-icons/bs';
+import { since } from "../utils/time";
+const { REACT_APP_VERSION, REACT_APP_STAMP } = process.env;
 
 interface LinkProps {
     icon: ReactNode
@@ -48,7 +50,7 @@ const Footer = ({ profile }: FooterProps) => {
                     { profile.urls.facebook && <Link icon={<BsFacebook/>} url={profile.urls.facebook}/> }
                 </div>
                 <div className="text-center py-4 text-black text-xs" style={text_shadow_styles}>
-                    © {new Date().getFullYear()} Aurimas Prusovas
+                    © {new Date().getFullYear()} Aurimas Prusovas • {REACT_APP_VERSION ?? '0.0.0'} • Updated {since(new Date(parseInt(REACT_APP_STAMP ?? "0") * 1_000))} ago
                 </div>
             </div>
         </>
