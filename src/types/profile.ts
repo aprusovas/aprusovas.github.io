@@ -8,6 +8,18 @@ export interface ProfileInfo {
      */
     description: string
     /**
+     * About
+     */
+    about: string
+    /**
+     * Full name
+     */
+    full_name: string
+    /**
+     * Date of experiance started
+     */
+    experience_started: Date
+    /**
      * Profile longer description
      */
     description_longer: string
@@ -19,6 +31,10 @@ export interface ProfileInfo {
      * Profile picture path for background
      */
     picture_bg: string
+    /**
+     * Favourite emoji
+     */
+    favourite_emoji: string
     /**
      * Skills to show in the end of description
      */

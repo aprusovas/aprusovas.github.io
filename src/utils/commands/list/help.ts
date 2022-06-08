@@ -2,7 +2,7 @@ import { ICommand, IExecutor } from "../registry";
 
 class HelpCommand implements ICommand<void> {
     name: string = 'help'
-    description: string = 'Show commands'
+    description: string = 'Show All Commands'
     constructor(private readonly executor: IExecutor) {}
 
     async run(): Promise<string> {

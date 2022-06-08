@@ -1,4 +1,6 @@
+import { profile } from "../profile"
 import ClearCommand from "./list/clear"
+import CVCommand from "./list/cv"
 import HelpCommand from "./list/help"
 
 const minimist = require('minimist')
@@ -60,3 +62,4 @@ export const global_executor: IExecutor = new GlobalExecutor()
 
 global_executor.registerCommand(new HelpCommand(global_executor))
 global_executor.registerCommand(new ClearCommand(global_executor))
+global_executor.registerCommand(new CVCommand(global_executor, profile))
