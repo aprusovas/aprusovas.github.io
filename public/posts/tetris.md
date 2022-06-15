@@ -12,7 +12,7 @@ tags:
 
 ## Tetris
 
-I remember creating `Tetris` when I was learning [Pascal](https://en.wikipedia.org/wiki/Pascal_(programming_language) and only knew how to draw something on `terminal`.
+I remember creating `Tetris` when I was learning [Pascal](https://en.wikipedia.org/wiki/Pascal_(programming_language)) and only knew how to draw something on `terminal`.
 
 Let's try again and do better this time!
 
