@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { RiCloseFill } from 'react-icons/ri';
 import ReactMarkdown from 'react-markdown';
 import { CodeProps } from "react-markdown/lib/ast-to-react";
@@ -49,9 +49,16 @@ const Tag = ({ name, big }: TagProps) => {
 const PostDialog = ({ post, content, profile, onToggleDialog }: PostDialogProps) => {
     const ref = useRef<HTMLDivElement>(null)
     const [visible, setVisible] = useState(false)
-    const onCloseDropdown = () => {
+    const onCloseDropdown = useCallback(() => {
         setVisible(false)
-    }
+    }, [])
+    
+    const onKeyDown = useCallback((event: KeyboardEvent) => {
+        if (event.key === "Escape" && visible) {
+            setVisible(false)
+        }
+    }, [visible])
+  
 
     useEffect(() => {
         const body_style = window.document.body.style
@@ -85,10 +92,18 @@ const PostDialog = ({ post, content, profile, onToggleDialog }: PostDialogProps)
         }
     }, [onToggleDialog, visible])
 
+    useEffect(() => {
+        document.addEventListener("keydown", onKeyDown, false)
+        return () => {
+            document.removeEventListener("keydown", onKeyDown, false)
+        }
+    }, [onKeyDown])
+
     return (
-        <div onClick={e => e.preventDefault()} className={`cursor-default fixed inset-0 p-2 md:p-4 bg-black/40 z-10 transition-opacity ${visible ? `opacity-100` : `opacity-0`}`}>
+        <div className={`cursor-default fixed inset-0 w-full p-2 md:p-4 bg-black/80 z-10 transition-opacity ${visible ? `opacity-100` : `opacity-0`}`}>
+            <div onClick={onCloseDropdown} className="absolute inset-0"></div>
             <div className="relative max-w-[500px] md:max-w-[700px] h-full m-auto flex items-center">
-                <div className={`w-full relative bg-white rounded-xl overflow-hidden z-10 shadow-lg ring-1 ring-slate-200 transition-all ${visible ? `translate-y-0 opacity-100` : `translate-y-4 opacity-0`}`}>
+                <div onClick={e => e.preventDefault()} className={`w-full relative bg-white rounded-xl overflow-hidden z-10 shadow-lg ring-1 ring-slate-200 transition-all ${visible ? `translate-y-0 opacity-100` : `translate-y-4 opacity-0`}`}>
                     <div onClick={onCloseDropdown} className="absolute right-6 top-6 text-2xl bg-slate-50/50 hover:bg-slate-100 rounded-full cursor-pointer p-2 z-10">
                         <RiCloseFill />
                     </div>
@@ -106,7 +121,7 @@ const PostDialog = ({ post, content, profile, onToggleDialog }: PostDialogProps)
                                         }
                                         const match = /language-(\w+)/.exec(className || '')
                                         return !inline && match ? (
-                                          <SyntaxHighlighter
+                                        <SyntaxHighlighter
                                             children={String(children).replace(/\n$/, '')}
                                             style={dracula as any}
                                             language={match[1]}
@@ -114,11 +129,11 @@ const PostDialog = ({ post, content, profile, onToggleDialog }: PostDialogProps)
                                             showLineNumbers
                                             wrapLines
                                             {...props}
-                                          />
+                                        />
                                         ) : (
-                                          <code className={className} {...props}>
+                                        <code className={className} {...props}>
                                             {children}
-                                          </code>
+                                        </code>
                                         )
                                     }
                                 }}
