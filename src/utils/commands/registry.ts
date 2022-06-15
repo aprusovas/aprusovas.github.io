@@ -3,6 +3,7 @@ import ClearCommand from "./list/clear"
 import CVCommand from "./list/cv"
 import HelpCommand from "./list/help"
 import HistoryCommand from "./list/history"
+import SetTitleCommand from "./list/title"
 
 const minimist = require('minimist')
 
@@ -18,6 +19,7 @@ export interface IExecutor {
 
     run(data: string): Promise<string>
 
+    getCommand(name: string): ICommand
     registerCommand(command: ICommand): void
     registerOnClearListener(listener: () => void): void
     unregisterOnClearListener(listener: () => void): void
@@ -46,6 +48,14 @@ class GlobalExecutor implements IExecutor {
         return `Unknown error`
     }
 
+    getCommand(name: string): ICommand {
+        const cmd = this.commands.get(name)
+        if (!cmd) {
+            throw new Error(`Command ${name} not found`)
+        }
+        return cmd
+    }
+
     registerCommand(command: ICommand): void {
         this.commands.set(command.name, command)
     }
@@ -65,3 +75,4 @@ global_executor.registerCommand(new HelpCommand(global_executor))
 global_executor.registerCommand(new ClearCommand(global_executor))
 global_executor.registerCommand(new CVCommand(global_executor, profile))
 global_executor.registerCommand(new HistoryCommand(global_executor))
+global_executor.registerCommand(new SetTitleCommand(global_executor))

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { ProfileInfo } from "../types/profile";
 import { ContentInfo } from "../types/content";
 import Filters, { FiltersLoading } from "./Filters";
@@ -11,6 +11,7 @@ import { PostInfo } from "../types/post";
 import Terminal from "./projects/terminal/Terminal";
 import { global_executor } from "../utils/commands/registry";
 import useStickyState from "../hooks/useStickyState";
+import SetTitleCommand from "../utils/commands/list/title";
 
 const fm = require('front-matter')
 
@@ -64,10 +65,23 @@ const NoPosts = () => {
 }
 
 const OpenTerminalButton = () => {
+    const title_command = global_executor.getCommand('title') as SetTitleCommand
+    const [title, setTitle] = useStickyState(title_command.title, 'terminal-title')
     const [open, setOpen] = useStickyState(false, 'terminal-visibility')
-    const onClick = () => {
+    const emptyHandler = useCallback(() => {}, [])
+    const onClick = useCallback(() => {
         setOpen(!open)
-    }
+    }, [open, setOpen])
+
+    title_command.title = title
+    
+    useEffect(() => {
+        title_command.setTitle = setTitle
+        return () => {
+            title_command.setTitle = () => {}
+        }
+    }, [setTitle, title_command])
+
     return (
         <div className="px-4 md:px-0">
             <div onClick={onClick} className={`rounded-md text-white text-xs uppercase px-2 py-1 cursor-pointer transition-colors flex items-center gap-x-2 bg-green-600 hover:bg-green-700 w-fit`}>
@@ -79,11 +93,11 @@ const OpenTerminalButton = () => {
                 open &&
                     <div className="rounded-lg my-2 overflow-hidden">
                         <Terminal
-                            title="home"
+                            title={title}
                             executor={global_executor}
                             onClose={onClick}
-                            onResize={() => {}}
-                            onEnlarge={() => {}}
+                            onResize={emptyHandler}
+                            onEnlarge={emptyHandler}
                             autoFocus
                         />
                     </div>

@@ -127,7 +127,7 @@ const Terminal = ({ title, onClose, onResize, onEnlarge, autoFocus, executor }: 
     }, [onClear])
 
     return (
-        <div className={`bg-gray-800 shadow-lg text-gray-100 text-sm font-mono subpixel-antialiased rounded-lg leading-normal overflow-hidden transition-all ${large ? `fixed z-50 w-auto ${!minimized ? 'inset-4' : 'inset-x-4 top-4'}` : `w-full`}`}>
+        <div className={`bg-gray-800 shadow-lg text-gray-100 text-sm font-mono subpixel-antialiased rounded-lg leading-normal overflow-hidden transition-all ${large ? `fixed z-50 w-auto ${!minimized ? 'inset-4' : 'inset-x-4 top-4'}` : `w-full`} `}>
             <div className="relative bg-gray-300 text-gray-900 px-4 py-3 flex items-center pointer-events-none group">
                 <div className="flex">
                     {
