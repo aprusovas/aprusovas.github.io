@@ -2,6 +2,7 @@ import ReactDOM from 'react-dom/client';
 import App from './components/App';
 import Snake from './components/projects/snake/Snake';
 import Terminal from './components/projects/terminal/Terminal';
+import Tetris from './components/projects/tetris/Tetris';
 import './index.css';
 import { ContentInfo } from './types/content';
 import { global_executor } from './utils/commands/registry';
@@ -19,7 +20,8 @@ const root = ReactDOM.createRoot(
  */
 const content: ContentInfo = {
     snake: <Snake/>,
-    terminal: <Terminal title="terminal for custom commands" executor={global_executor}/>
+    terminal: <Terminal title="terminal for custom commands" executor={global_executor}/>,
+    tetris: <Tetris/>
 }
 
 /**
@@ -27,7 +29,8 @@ const content: ContentInfo = {
  */
 const posts: string[] = [
     "snake",
-    "terminal"
+    "terminal",
+    "tetris"
 ]
 
 root.render(
