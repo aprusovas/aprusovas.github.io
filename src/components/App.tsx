@@ -10,6 +10,7 @@ import { RiCloseFill } from "react-icons/ri"
 import { PostInfo } from "../types/post";
 import Terminal from "./projects/terminal/Terminal";
 import { global_executor } from "../utils/commands/registry";
+import useStickyState from "../hooks/useStickyState";
 
 const fm = require('front-matter')
 
@@ -63,7 +64,7 @@ const NoPosts = () => {
 }
 
 const OpenTerminalButton = () => {
-    const [open, setOpen] = useState(false)
+    const [open, setOpen] = useStickyState(false, 'terminal-visibility')
     const onClick = () => {
         setOpen(!open)
     }

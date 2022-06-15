@@ -17,7 +17,28 @@ interface TerminalProps {
     executor: IExecutor
 }
 
+const get_history_by_index = (index: number): string => {
+    if (index < 0) {
+        return ""
+    }
+    const history = JSON.parse(localStorage.getItem('terminal-history') ?? '[]')
+    if (Array.isArray(history)) {
+        let curr_index = 0
+        for (let i = history.length - 1; i >= 0; --i) {
+            const value = history[i]
+            if (typeof value === 'string') {
+                if (index === curr_index) {
+                    return value
+                }
+                curr_index++
+            }
+        }
+    }
+    return ""
+}
+
 const Terminal = ({ title, onClose, onResize, onEnlarge, autoFocus, executor }: TerminalProps) => {
+    const [history_index, setHistoryIndex] = useState(-1)
     const [history, setHistory] = useStickyState<(string | { value: string })[]>([], 'terminal-history')
     const [large, setLarge] = useState(false)
     const [minimized, setMinimized] = useState(false)
@@ -31,11 +52,32 @@ const Terminal = ({ title, onClose, onResize, onEnlarge, autoFocus, executor }: 
 
     const onKeyDown = useCallback((event: KeyboardEvent) => {
         const value = ref.current?.value
-        if (event.key === 'Enter' && value != null) {
-            setHistory(prev => {
-                return [...prev, value].slice(-MAX_HISTORY)
-            })
 
+        if (event.key === 'ArrowDown') {
+            const next_index = Math.max(history_index - 1, -1)
+            const next_text = get_history_by_index(next_index)
+
+            setHistoryIndex(next_index)
+            setText(next_text)
+
+            event.preventDefault()
+            event.stopPropagation()
+        }
+
+        if (event.key === 'ArrowUp') {
+            const next_index = Math.min(history_index + 1, history.length - 1)
+            const next_text = get_history_by_index(next_index)
+
+            setHistoryIndex(next_index)
+            setText(next_text)
+
+            event.preventDefault()
+            event.stopPropagation()
+        }
+
+        if (event.key === 'Enter' && value != null) {
+            setHistoryIndex(-1)
+            setHistory(prev => { return [...prev, value].slice(-MAX_HISTORY) })
             setText("")
 
             executor.run(value).then((data) => {
@@ -52,7 +94,7 @@ const Terminal = ({ title, onClose, onResize, onEnlarge, autoFocus, executor }: 
                 }
             })
         }
-    }, [executor, setHistory])
+    }, [executor, history.length, history_index, setHistory])
 
     const onTextChange = useCallback((event: ChangeEvent<HTMLInputElement>) => {
         setText(event.target.value)
@@ -74,6 +116,7 @@ const Terminal = ({ title, onClose, onResize, onEnlarge, autoFocus, executor }: 
 
     useEffect(() => {
         bodyRef.current?.scrollTo(0, bodyRef.current.scrollHeight)
+        ref.current?.setSelectionRange(text.length, text.length)
     }, [text, history])
 
     useEffect(() => {
